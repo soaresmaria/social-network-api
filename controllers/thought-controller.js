@@ -1,10 +1,11 @@
-const Thought = require('../models/Thought');
+const { Thought } = require('../models/Thought');
 const User = require('../models/User');
 
 const thoughtController = {
     // get all thoughts
     getAllThoughts(req, res) {
         Thought.find({})
+            // .populate('reactionId')
             .then(dbThoughtData => res.json(dbThoughtData))
             .catch(err => {
                 console.log(err);
@@ -87,16 +88,15 @@ const thoughtController = {
 
     // add reaction
     addReaction({ params, body }, res) {
-        console.log(req.params.thoughtId);
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
             { $addToSet: { reactions: body } },
             { new: true, runValidators: true }
         )
-        .then(dbThoughtData => {
-            if (!dbThoughtData) {
-                return res.status(404).json({ message: 'No thought found with this id!' });
-            }
+            .then(dbThoughtData => {
+                if (!dbThoughtData) {
+                    return res.status(404).json({ message: 'No thought found with this id!' });
+                }
                 res.json(dbThoughtData);
             })
             .catch(err => res.json(err));
@@ -104,15 +104,15 @@ const thoughtController = {
 
     // remove reaction
     removeReaction({ params }, res) {
+        console.log(params.thoughtId, params.reactionId);
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
             { $pull: { reactions: { reactionId: params.reactionId } } },
-            { new: true }
+            { runValidators: true, new: true }
         )
             .then(dbUserData => res.json(dbUserData))
             .catch(err => res.json(err));
     }
-
 };
 
-module.exports = thoughtController; 
+module.exports = thoughtController;
