@@ -95,10 +95,9 @@ const thoughtController = {
             { new: true, runValidators: true }
         )
         .then(dbThoughtData => {
-            console.log(dbThoughtData);
             if (!dbThoughtData) {
-                return res.status(404).json({ message: 'No user found with this id!' });
-                }
+                return res.status(404).json({ message: 'No thought found with this id!' });
+            }
                 res.json(dbThoughtData);
             })
             .catch(err => res.json(err));
