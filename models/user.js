@@ -45,4 +45,4 @@ UserSchema.virtual('friendCount').get(function () {
 });
 
 // export the User model
-module.exports = User; 
+module.exports = User;

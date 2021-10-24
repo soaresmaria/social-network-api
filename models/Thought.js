@@ -29,18 +29,13 @@ const thoughtSchema = new Schema(
     }
 );
 
-// create the User model using the UserSchema
-const Thought = model('Thought', thoughtSchema);
-
 // get total count of friends
 thoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length;
 });
 
-//gets the total count of friends
-thoughtSchema.virtual('reactionCount').get(function () {
-    return this.reactions.length;
-});
+// create the User model using the UserSchema
+const Thought = model('Thought', thoughtSchema);
 
 // export the User model
-module.exports = { Thought };  
+module.exports = { Thought };
