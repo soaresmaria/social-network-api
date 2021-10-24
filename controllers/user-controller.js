@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Thought } = require('../models');
 
 const userController = {
     // get all users
@@ -56,6 +56,26 @@ const userController = {
     // delete user
     deleteUser({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
+            .then(async dbUserData => {
+                if (!dbUserData) {
+                    res.status(404).json({ message: 'No user found with this id!' });
+                    return;
+                }
+
+                // remove a user's associated thoughts when deleted.
+                var thoughts = dbUserData.thoughts;
+                await thoughts.forEach(thought => {
+                    Thought.findOneAndDelete({ _id: thought });
+                });
+
+                res.json(dbUserData);
+            })
+            .catch(err => res.status(400).json(err));
+    },
+
+    // add friend
+    addFriend({ params }, res) {
+        User.findOneAndUpdate({ _id: params.id }, { $inc: { friends: params.friendId } }, { runValidators: true, upsert: true })
             .then(dbUserData => {
                 if (!dbUserData) {
                     res.status(404).json({ message: 'No user found with this id!' });
@@ -64,7 +84,20 @@ const userController = {
                 res.json(dbUserData);
             })
             .catch(err => res.status(400).json(err));
-    }
-}
+    },
 
+     // remove friend
+     removeFriend({ params }, res) {
+        User.findOneAndDelete({ _id: params.id }, { $pull: { friends: params.friendId } })
+            .then(dbUserData => {
+                if (!dbUserData) {
+                    res.status(404).json({ message: 'No user found with this id!' });
+                    return;
+                }
+                res.json(dbUserData);
+            })
+            .catch(err => res.status(400).json(err));
+    },
+
+}
 module.exports = userController;
