@@ -1,7 +1,7 @@
-const { Schema, model } = require('mongoose');
+const { Schema, Types } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
-const reactionSchema = new Schema(
+const Reaction = new Schema(
     {
         // set custom id to avoid confusion with parent comment _id
         reactionId: {
@@ -30,7 +30,5 @@ const reactionSchema = new Schema(
         id: false
     }
 );
-
-const Reaction = model('Reaction', reactionSchema);
 
 module.exports = { Reaction }; 
