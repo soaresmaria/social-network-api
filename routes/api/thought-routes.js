@@ -13,16 +13,16 @@ const { route } = require('./user-routes');
 // /api/thoughts
 router.route('/').get(getAllThoughts);
 
+// /api/thoughts/<userId>
 router.route('/:userId').post(addThought);
 
 router
-.route('/:thoughtId')
-.get(getThoughtById)
-.put(updateThought)
+    .route('/:thoughtId')
+    .get(getThoughtById)
+    .put(updateThought)
 
 router
     .route('/:userId/:thoughtId')
-    .put(addReaction)
     .delete(removeThought);
 
 router
@@ -30,7 +30,7 @@ router
     .post(addReaction);
 
 router
-.route('/:thoughtId/reactions/:reactionId')
-.delete(removeReaction);
+    .route('/:thoughtId/reactions/:reactionId')
+    .delete(removeReaction);
 
-module.exports = router; 
+module.exports = router;
