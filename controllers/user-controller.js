@@ -68,7 +68,12 @@ const userController = {
                     Thought.findOneAndDelete({ _id: thought });
                 });
 
-                res.json(dbUserData);
+                // return Thought.deleteMany({ _id: { $in: thoughts } })
+
+                // res.json(dbUserData);
+            })
+            .then(() => {
+                res.json({ message: 'user has been deleted.' });
             })
             .catch(err => res.status(400).json(err));
     },
