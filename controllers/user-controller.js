@@ -14,10 +14,8 @@ const userController = {
     // get one user by id
     getUserById({ params }, res) {
         User.findOne({ _id: params.id })
-            .populate({
-                path: 'thoughts',
-                select: '-__v'
-            })
+            .populate('thoughts')
+            .populate('friends')
             .select('-__v')
             .then(dbUserData => {
                 if (!dbUserData) {
@@ -56,21 +54,12 @@ const userController = {
     // delete user
     deleteUser({ params }, res) {
         User.findOneAndDelete({ _id: params.id })
-            .then(async dbUserData => {
+            .then(dbUserData => {
                 if (!dbUserData) {
-                    res.status(404).json({ message: 'No user found with this id!' });
-                    return;
+                    return res.status(404).json({ message: 'No user found with this id!' });
                 }
 
-                // remove a user's associated thoughts when deleted.
-                var thoughts = dbUserData.thoughts;
-                await thoughts.forEach(thought => {
-                    Thought.findOneAndDelete({ _id: thought });
-                });
-
-                // return Thought.deleteMany({ _id: { $in: thoughts } })
-
-                // res.json(dbUserData);
+                // bonus: return Thought.deleteMany({ _id: { $in: dbUserData.thoughts } })
             })
             .then(() => {
                 res.json({ message: 'user has been deleted.' });
@@ -91,8 +80,8 @@ const userController = {
             .catch(err => res.status(400).json(err));
     },
 
-     // remove friend
-     removeFriend({ params }, res) {
+    // remove friend
+    removeFriend({ params }, res) {
         User.findOneAndUpdate({ _id: params.id }, { $pull: { friends: params.friendId } }, { runValidators: true })
             .then(dbUserData => {
                 if (!dbUserData) {
@@ -105,4 +94,5 @@ const userController = {
     },
 
 }
+
 module.exports = userController;
