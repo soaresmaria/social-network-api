@@ -1,9 +1,10 @@
 const { Schema, Types } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
-const Reaction = new Schema(
+// reaction schema tied to thought
+const reactionSchema = new Schema(
     {
-        // set custom id to avoid confusion with parent comment _id
+        // set custom id to avoid confusion with parent id
         reactionId: {
             type: Schema.Types.ObjectId,
             default: () => new Types.ObjectId()
@@ -31,4 +32,4 @@ const Reaction = new Schema(
     }
 );
 
-module.exports = { Reaction }; 
+module.exports = reactionSchema;
