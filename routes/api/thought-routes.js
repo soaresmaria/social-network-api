@@ -22,11 +22,8 @@ router
 
 router
     .route('/:userId/:thoughtId')
+    .put(addReaction)
     .delete(removeThought);
-
-router
-.route('/:thoughtId/reactions')
-.post(addReaction)
 
 router
 .route('/:thoughtId/reactions/:reactionId')
